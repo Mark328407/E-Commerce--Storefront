@@ -1,4 +1,3 @@
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -24,12 +23,11 @@ db.once('open', () => console.log('Now connected to MongoDB Atlas'));
 
 const corsOption = {
   origin: [
-    'http://localhost:8000',
-    'http://zuitt-bootcamp-prod-599-9467-estrecho.s3-website.us-east-1.amazonaws.com',
-    'https://capstone-3-beta.vercel.app'
-    
+    'http://localhost:5173',       // Vite dev server (storefront frontend)
+    'http://localhost:4173',       // Vite preview build
+    'https://e-commerce-storefront-eight.vercel.app' // storefront on Vercel
   ],
-  
+
   credentials: true,
   optionsSuccessStatus: 200
 }
@@ -37,6 +35,19 @@ const corsOption = {
 
 app.use(express.json());
 app.use(cors(corsOption));
+
+app.get("/", (req, res) => {
+  res.status(200).send({
+    message: "E-Commerce Storefront API is live.",
+    author: "Mark Anthony Estrecho",
+    status: "OK",
+    endpoints: {
+      products: "/products/active",
+      login: "POST /users/login",
+      register: "POST /users/register"
+    }
+  });
+});
 
 app.use("/users", userRoutes);
 app.use("/products", productRoutes);
@@ -50,4 +61,3 @@ if(require.main === module) {
 };
 
 module.exports = {app, mongoose};
-
